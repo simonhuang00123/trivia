@@ -3,7 +3,9 @@ import "../css/App.css";
 import data from "../sample_data.json";
 
 function App() {
-  var currentQuestion = 0;
+  let [currentQuestion, setQuestion] = useState(0);
+  var thisQuestion = data[currentQuestion].question;
+  let [mode, setMode] = useState("not ready");
   return (
     <div>
       <div className="app">Trivia!</div>
@@ -13,9 +15,16 @@ function App() {
           choices={data[currentQuestion].question.choices}
         />
       </div>
-
+      <button onClick={() => setMode(thisQuestion.choices[thisQuestion.correct_choice_index])}>Click for the correct answer</button>
+      <div>The correct answer is {mode}</div>
       <div>
-        <NextQuestion />
+        <NextQuestion 
+        neededFunction = {
+          function nextOne() {
+            setQuestion(currentQuestion + 1)
+          }
+        }
+        />
       </div>
     </div>
   );
@@ -23,14 +32,6 @@ function App() {
 function Answer(props) {
   return <div>{props.name}</div>;
 }
-
-let x = [1, 2, 3, 4];
-console.log(
-  x.map((element) => {
-    return element * 2;
-  })
-);
-
 function Question(props) {
   return (
     <div>
@@ -44,7 +45,7 @@ function Question(props) {
   );
 }
 function NextQuestion(props) {
-  return <button> Next Question{props.name}</button>;
+  return <button onClick={() => {props.neededFunction()}} > Next Question{props.name}</button>;
 }
 
 export default App;
